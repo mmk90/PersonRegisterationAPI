@@ -80,7 +80,7 @@ namespace PersonRegisteration.Controllers
             _context.People.Add(person);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPerson", new { id = person.Id }, person);
+            return NoContent();
         }
 
         // DELETE: api/People/5
