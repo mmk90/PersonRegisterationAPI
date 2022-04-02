@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PersonRegisteration;
+using Newtonsoft.Json;
 
 namespace PersonRegisteration.Controllers
 {
@@ -22,9 +23,20 @@ namespace PersonRegisteration.Controllers
 
         // GET: api/People
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetPeople()
+        public async Task<IEnumerable<Person>> GetPeople()
         {
-            return await _context.People.ToListAsync();
+            var people = _context.People.Include(c => c.PersonPersonalities).ToList();
+            foreach (var item in people)
+            {
+                foreach (var item2 in item.PersonPersonalities)
+                {
+                    item.personalities += _context.Personality.Find(item2.PersonalityId).Title + ", ";
+                }
+                item.personalities = item.personalities.Remove(item.personalities.Length -2);
+                item.PersonPersonalities = null;
+            }
+
+            return people;
         }
 
         // GET: api/People/5
@@ -77,6 +89,8 @@ namespace PersonRegisteration.Controllers
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
+
+            var a = Request.Form["personality"];
             _context.People.Add(person);
             await _context.SaveChangesAsync();
 

@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonRegisteration;
 
 namespace PersonRegisteration.Migrations
 {
     [DbContext(typeof(PersonDbContext))]
-    partial class PersonDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220402085802_addPersonality")]
+    partial class addPersonality
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,34 +39,17 @@ namespace PersonRegisteration.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PersonalityId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("People");
-                });
-
-            modelBuilder.Entity("PersonRegisteration.PersonPersonality", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PersonalityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
-
                     b.HasIndex("PersonalityId");
 
-                    b.ToTable("PersonPersonality");
+                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("PersonRegisteration.Personality", b =>
@@ -82,28 +67,20 @@ namespace PersonRegisteration.Migrations
                     b.ToTable("Personality");
                 });
 
-            modelBuilder.Entity("PersonRegisteration.PersonPersonality", b =>
+            modelBuilder.Entity("PersonRegisteration.Person", b =>
                 {
-                    b.HasOne("PersonRegisteration.Person", "Person")
-                        .WithMany("PersonPersonalities")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("PersonRegisteration.Personality", "Personality")
-                        .WithMany()
+                        .WithMany("Peoplle")
                         .HasForeignKey("PersonalityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Person");
-
                     b.Navigation("Personality");
                 });
 
-            modelBuilder.Entity("PersonRegisteration.Person", b =>
+            modelBuilder.Entity("PersonRegisteration.Personality", b =>
                 {
-                    b.Navigation("PersonPersonalities");
+                    b.Navigation("Peoplle");
                 });
 #pragma warning restore 612, 618
         }

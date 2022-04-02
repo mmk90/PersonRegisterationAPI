@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonRegisteration;
 
 namespace PersonRegisteration.Migrations
 {
     [DbContext(typeof(PersonDbContext))]
-    partial class PersonDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220402125156_syncdb")]
+    partial class syncdb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,28 +47,6 @@ namespace PersonRegisteration.Migrations
                     b.ToTable("People");
                 });
 
-            modelBuilder.Entity("PersonRegisteration.PersonPersonality", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PersonalityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
-
-                    b.HasIndex("PersonalityId");
-
-                    b.ToTable("PersonPersonality");
-                });
-
             modelBuilder.Entity("PersonRegisteration.Personality", b =>
                 {
                     b.Property<int>("Id")
@@ -80,30 +60,6 @@ namespace PersonRegisteration.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Personality");
-                });
-
-            modelBuilder.Entity("PersonRegisteration.PersonPersonality", b =>
-                {
-                    b.HasOne("PersonRegisteration.Person", "Person")
-                        .WithMany("PersonPersonalities")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PersonRegisteration.Personality", "Personality")
-                        .WithMany()
-                        .HasForeignKey("PersonalityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-
-                    b.Navigation("Personality");
-                });
-
-            modelBuilder.Entity("PersonRegisteration.Person", b =>
-                {
-                    b.Navigation("PersonPersonalities");
                 });
 #pragma warning restore 612, 618
         }
