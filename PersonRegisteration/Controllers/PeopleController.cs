@@ -89,7 +89,7 @@ namespace PersonRegisteration.Controllers
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
-
+            var b = Request;
             var a = Request.Form["personality"];
             _context.People.Add(person);
             await _context.SaveChangesAsync();
