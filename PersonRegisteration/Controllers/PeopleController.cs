@@ -31,8 +31,9 @@ namespace PersonRegisteration.Controllers
                 foreach (var item2 in item.PersonPersonalities)
                 {
                     item.personalities += _context.Personality.Find(item2.PersonalityId).Title + ", ";
+                    item.personalitiesIds.Add(item2.PersonalityId);
                 }
-                item.personalities = item.personalities.Remove(item.personalities.Length -2);
+                item.personalities = item.personalities?.Remove(item.personalities.Length - 2);
                 item.PersonPersonalities = null;
             }
 
@@ -68,6 +69,27 @@ namespace PersonRegisteration.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+
+                var personalitiesId = _context.PersonPersonality.Where(c => c.PersonId == person.Id)?.ToList();
+                if (personalitiesId != null)
+                {
+                    foreach (var item in personalitiesId)
+                    {
+                        _context.PersonPersonality.Remove(item);
+                        _context.SaveChanges();
+                    }
+                }
+
+                if (person.personalitiesIds != null && person.personalitiesIds.Count() > 0)
+                {
+                    foreach (var item in person.personalitiesIds)
+                    {
+                        _context.PersonPersonality.Add(new PersonPersonality() { PersonalityId = item, PersonId = person.Id });
+                        _context.SaveChanges();
+                    }
+
+                }
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -89,10 +111,20 @@ namespace PersonRegisteration.Controllers
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
-            var b = Request;
-            var a = Request.Form["personality"];
             _context.People.Add(person);
             await _context.SaveChangesAsync();
+
+            if (person.personalitiesIds != null && person.personalitiesIds.Count() > 0)
+            {
+                foreach (var item in person.personalitiesIds)
+                {
+                    _context.PersonPersonality.Add(new PersonPersonality() { PersonalityId = item, PersonId = person.Id });
+                    _context.SaveChanges();
+                }
+
+            }
+
+
 
             return NoContent();
         }

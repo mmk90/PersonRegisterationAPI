@@ -17,6 +17,9 @@ namespace PersonRegisteration
         public Status Status { get; set; }
         [NotMapped]
         public string personalities { get; set; }
+
+        [NotMapped]
+        public List<int> personalitiesIds { get; set; } = new List<int>();
         public List<PersonPersonality> PersonPersonalities { get; set; }
     }
 }
